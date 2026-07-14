@@ -21,18 +21,18 @@ import Link from "next/link";
 const features = [
   {
     icon: ClipboardCheck,
-    title: "Plan personalizado",
-    text: "Ejercicios adaptados por el equipo de rehabilitación.",
+    title: "Tu Plan",
+    text: "Hecho para ti por el equipo de rehabilitación.",
   },
   {
     icon: Smartphone,
-    title: "Seguimiento desde casa",
-    text: "El paciente registra sus sesiones desde el móvil.",
+    title: "Registra tus sesiones",
+    text: "Anota cómo te encuentras después de cada entrenamiento.",
   },
   {
     icon: Stethoscope,
-    title: "Revisión profesional",
-    text: "El equipo puede consultar la evolución cuando lo necesite.",
+    title: "Siempre acompañado",
+    text: "Tu equipo puede revisar tu evolución cuando sea necesario.",
   },
 ];
 
@@ -54,12 +54,18 @@ export default function HomePage() {
             </div>
           </Link>
 
-          <Button variant="ghost" className="hidden sm:inline-flex">
-            Acceder
-          </Button>
+          <Link href="/dashboard" className="hidden lg:block">
+            <Button
+              size="lg"
+              className="h-14 rounded-2xl whitespace-nowrap "
+            >
+              Entrar
+              <ArrowRight className="size-5" />
+            </Button>
+          </Link>
         </header>
 
-        <div className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
+        <div className="grid gap-10 pt-10 pb-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:pt-24 lg:pb-16">
           <section>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-2 text-sm text-muted-foreground shadow-sm">
               <ShieldCheck className="size-4 text-primary" />
@@ -67,30 +73,18 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl font-black tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-              Tu corazón sigue entrenando en casa.
+              Volver a Latir también es volver a caminar.
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-              Una herramienta sencilla para que los pacientes continúen su
-              programa de rehabilitación cardíaca y el equipo sanitario pueda
-              revisar su evolución.
+              Continúa tu programa de rehabilitación cardíaca desde casa y permite que tu equipo sanitario siga acompañándote en cada paso.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/dashboard">
                 <Button size="lg" className="h-14 w-full rounded-2xl text-base sm:w-auto">
-                  Comenzar
+                  Entrar
                   <ArrowRight className="size-5" />
-                </Button>
-              </Link>
-
-              <Link href="/test">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-14 w-full rounded-2xl text-base sm:w-auto"
-                >
-                  Probar conexión
                 </Button>
               </Link>
             </div>
