@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  PROFESSIONAL
+  PATIENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient      Patient?
+  professional Professional?
+}
+
+model Professional {
+  id        String @id @default(cuid())
+
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id])
+
+  firstName String
+  lastName  String
+
+  patients  Patient[]
+}
+
+model Patient {
+  id        String @id @default(cuid())
+
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id])
+
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id])
+
+  firstName String
+  lastName  String
+
+  birthDate DateTime?
+
+  createdAt DateTime @default(now())
+}
