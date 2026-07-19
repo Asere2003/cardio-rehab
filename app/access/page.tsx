@@ -1,6 +1,6 @@
 // app/access/page.tsx
 
-import { ArrowLeft, ArrowRight, HeartPulse, Stethoscope } from "lucide-react";
+import { ArrowLeft, HeartPulse, Stethoscope } from "lucide-react";
 
 import { ActionCard } from "@/components/cards/action-card";
 import { Button } from "@/components/ui/button";
