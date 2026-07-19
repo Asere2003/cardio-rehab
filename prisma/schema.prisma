@@ -13,11 +13,59 @@ enum UserRole {
   PATIENT
 }
 
+enum PatientProgramStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  DISCHARGED
+  FOLLOW_UP
+  WITHDRAWN
+}
+
+enum Permission {
+  PATIENT_CREATE
+  PATIENT_VIEW
+  PATIENT_EDIT
+  PLAN_ASSIGN
+  PLAN_EDIT
+  SESSION_VIEW
+  REPORT_GENERATE
+  PROFESSIONAL_MANAGE
+  AUDIT_VIEW
+}
+
+model Organization {
+  id         String    @id @default(cuid())
+  name       String
+  slug       String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  disabledAt DateTime?
+
+  careUnits CareUnit[]
+}
+
+model CareUnit {
+  id             String    @id @default(cuid())
+  organizationId String
+  name           String
+  slug           String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  disabledAt     DateTime?
+
+  organization Organization             @relation(fields: [organizationId], references: [id])
+  memberships  ProfessionalMembership[]
+  enrollments  PatientEnrollment[]
+
+  @@unique([organizationId, slug])
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  role      UserRole
+  id       String   @id @default(cuid())
+  email    String   @unique
+  password String
+  role     UserRole
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -27,22 +75,26 @@ model User {
 }
 
 model Professional {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId    String @unique
-  user      User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 
   firstName String
   lastName  String
 
-  patients  Patient[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  patients    Patient[]
+  memberships ProfessionalMembership[]
 }
 
 model Patient {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId    String @unique
-  user      User   @relation(fields: [userId], references: [id])
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
 
   professionalId String
   professional   Professional @relation(fields: [professionalId], references: [id])
@@ -53,4 +105,47 @@ model Patient {
   birthDate DateTime?
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  enrollments PatientEnrollment[]
+}
+
+model ProfessionalMembership {
+  id             String       @id @default(cuid())
+  professionalId String
+  careUnitId     String
+  permissions    Permission[] @default([])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  endedAt        DateTime?
+
+  professional           Professional        @relation(fields: [professionalId], references: [id])
+  careUnit               CareUnit            @relation(fields: [careUnitId], references: [id])
+  responsibleEnrollments PatientEnrollment[] @relation("ResponsibleMembership")
+
+  @@unique([professionalId, careUnitId])
+  @@index([careUnitId])
+  @@index([endedAt])
+}
+
+model PatientEnrollment {
+  id                      String               @id @default(cuid())
+  patientId               String
+  careUnitId              String
+  responsibleMembershipId String?
+  status                  PatientProgramStatus @default(PENDING)
+  internalReference       String?
+  startedAt               DateTime?
+  endedAt                 DateTime?
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+
+  patient               Patient                 @relation(fields: [patientId], references: [id])
+  careUnit              CareUnit                @relation(fields: [careUnitId], references: [id])
+  responsibleMembership ProfessionalMembership? @relation("ResponsibleMembership", fields: [responsibleMembershipId], references: [id])
+
+  @@unique([careUnitId, internalReference])
+  @@index([careUnitId, status])
+  @@index([patientId, status])
+  @@index([responsibleMembershipId])
 }
