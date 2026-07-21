@@ -64,7 +64,7 @@ model CareUnit {
 model User {
   id       String   @id @default(cuid())
   email    String   @unique
-  password String
+  password String?
   role     UserRole
 
   createdAt DateTime @default(now())
@@ -80,8 +80,9 @@ model Professional {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  firstName String
-  lastName  String
+  firstName            String
+  lastName             String
+  professionalCategory String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

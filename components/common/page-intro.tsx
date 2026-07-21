@@ -17,12 +17,10 @@ export function PageIntro({
   return (
     <div className={cn("mb-8", className)}>
       {badge && (
-        <p className="mb-2 text-sm font-semibold text-primary">
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-2 text-sm text-muted-foreground shadow-sm ">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-2 text-sm text-muted-foreground shadow-sm">
             <ShieldCheck className="size-4 text-primary" />
             {badge}
-          </div>
-        </p>
+        </div>
       )}
 
       <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
